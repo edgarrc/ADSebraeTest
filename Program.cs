@@ -125,7 +125,7 @@ namespace ADSebraeTest
                     Console.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + $" ERRO: " + ex.Message);
                 }
                 finally {
-                    if (up != null) pc.Dispose();
+                    if (up != null) up.Dispose();
                     if (pc != null) pc.Dispose();
                 }
 
