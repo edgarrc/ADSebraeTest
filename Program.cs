@@ -63,13 +63,17 @@ namespace ADSebraeTest
             PrincipalContext pc = null;
             UserPrincipal up = null;
 
-
+            /* Usuário e senha que será utilizado para acessar o AD e buscar o usuário da aplicação.
+               É o mesmo usuário do pool do iis e o mesmo código que a aplicação usa.
+               Apesar do pool, é feito o uso desse usuário e senha diretamente no código conforme
+               este exemplo, prevalecendo sobre o do pool do iis. */
             Console.WriteLine("==== Teste de autenticação do usuário no AD ====");
             Console.WriteLine();
             Console.Write("Digite o nome do usuário no AD: ");
             adUser = Console.ReadLine();
             Console.Write("Digite a senha do usuário do AD: ");
             adPass = ReadPassword('*');
+
 
             while (true)
             {
@@ -94,26 +98,35 @@ namespace ADSebraeTest
                     Console.WriteLine();
                     Console.WriteLine($"Tentando buscar {login} (domínio: {domain} user: {user})");
 
+                    //Contexto de autenticação no AD
                     pc = new PrincipalContext(ContextType.Domain, domain, adUser, adPass);
 
+                    //Tenta apenas buscar o usuário, sem autenticá-lo, a senha do usuário não é necessária
                     up = UserPrincipal.FindByIdentity(pc, user);
 
+                    /* 
+                        Se exibiu encontrado ou não encontrado, está tudo certo, mesmo não encontrado, foi possível contatar o ad e fazer a busca
+                        Mas o que ocorre é que o FindByIdentity gera uma exceção
+                    */
                     if (up != null)
                     {
                         Console.WriteLine();
-                        Console.WriteLine($"Login {login} ENCONTRADO OK!");
+                        Console.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + $" Login {login} ENCONTRADO OK!");
                     }
                     else
                     {
                         Console.WriteLine();
-                        Console.WriteLine($"Login {login} NÂO ENCONTRADO!");
+                        Console.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + $" Login {login} NÂO ENCONTRADO!");
                     }
-
                 }
                 catch(Exception ex)
                 {
                     Console.WriteLine();
-                    Console.WriteLine("ERRO: " + ex.Message);
+                    Console.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + $" ERRO: " + ex.Message);
+                }
+                finally {
+                    if (up != null) pc.Dispose();
+                    if (pc != null) pc.Dispose();
                 }
 
                 Console.WriteLine();
@@ -121,7 +134,8 @@ namespace ADSebraeTest
                 bool continua = Console.ReadLine().ToLower() == "s" ? true : false;
                 if (!continua)
                     break;
-            }
+
+            }            
 
         }
     }
