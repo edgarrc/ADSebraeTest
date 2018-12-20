@@ -10,13 +10,13 @@ Nesse momento é gerado uma exceção de usuário e senha inválidos, se referin
 
 A senha do usuário da aplicação é irrelevante nessa etapa, o erro ocorre antes da sua autenticação.
 
-# Release
+## Release
 
 A última release, com executável compilado, pode ser encontrado em: 
 
 https://github.com/edgarrc/ADSebraeTest/releases
 
-# Runtime
+## Runtime
 
 É necessário a existência do .Net Framework instalado.
 
